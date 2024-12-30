@@ -16,7 +16,7 @@ ${context.join('\n')}
       role: 'system',
     },
     {
-      content: `Follow Up Input: ${query}, it's standalone query:`,
+      content: `Follow Up Input: ${query}, it's a standalone query:`,
       role: 'user',
     },
   ],
