@@ -1,5 +1,5 @@
 import { DEFAULT_AGENT_META } from '@/const/meta';
-import { DEFAULT_MODEL } from '@/const/settings/llm';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '@/const/settings/llm';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { LobeAgentChatConfig, LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
 import { UserDefaultAgent } from '@/types/user/settings';
@@ -9,7 +9,7 @@ export const DEFAUTT_AGENT_TTS_CONFIG: LobeAgentTTSConfig = {
   sttLocale: 'auto',
   ttsService: 'openai',
   voice: {
-    openai: 'alloy',
+    openai: 'nova',
   },
 };
 
@@ -19,7 +19,7 @@ export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
   enableAutoCreateTopic: true,
   enableCompressHistory: true,
   enableHistoryCount: true,
-  historyCount: 8,
+  historyCount: 20,
 };
 
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
@@ -32,7 +32,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
     top_p: 1,
   },
   plugins: [],
-  provider: ModelProvider.OpenAI,
+  provider: DEFAULT_PROVIDER,
   systemRole: '',
   tts: DEFAUTT_AGENT_TTS_CONFIG,
 };

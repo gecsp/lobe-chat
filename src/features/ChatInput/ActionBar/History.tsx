@@ -33,7 +33,7 @@ const History = memo(() => {
         <Flexbox align={'center'} gap={16} horizontal>
           <SliderWithInput
             disabled={!enableHistoryCount}
-            max={20}
+            max={80}
             min={0}
             onChange={(v) => {
               updateAgentConfig({ historyCount: v });

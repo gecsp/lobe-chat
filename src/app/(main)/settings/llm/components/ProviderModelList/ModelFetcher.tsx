@@ -46,7 +46,7 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
     s.clearObtainedModels,
     s.setModelProviderConfig,
   ]);
-  const enabledAutoFetch = useUserStore(modelConfigSelectors.isAutoFetchModelsEnabled(provider));
+  const enabledAutoFetch = true;
   const latestFetchTime = useUserStore(
     (s) => settingsSelectors.providerConfig(provider)(s)?.latestFetchTime,
   );

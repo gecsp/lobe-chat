@@ -59,11 +59,7 @@ const currentEditingCustomModelCard = (s: UserStore) => {
   return getCustomModelCard({ id, provider })(s);
 };
 
-const isAutoFetchModelsEnabled =
-  (provider: GlobalLLMProviderKey) =>
-  (s: UserStore): boolean => {
-    return getProviderConfigById(provider)(s)?.autoFetchModelLists || false;
-  };
+const isAutoFetchModelsEnabled = true;
 
 const openAIConfig = (s: UserStore) => currentLLMSettings(s).openai;
 const bedrockConfig = (s: UserStore) => currentLLMSettings(s).bedrock;
