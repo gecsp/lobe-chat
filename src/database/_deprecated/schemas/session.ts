@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { DEFAULT_MODEL } from '@/const/settings';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER} from '@/const/settings';
 import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
 
@@ -36,7 +36,7 @@ export const AgentSchema = z.object({
     top_p: z.number().default(1).optional(),
   }),
   plugins: z.array(z.string()).optional(),
-  provider: z.string().default('openai').optional(),
+  provider: z.string().default(DEFAULT_PROVIDER).optional(),
   systemRole: z.string().default(''),
   tts: ttsSchema.optional(),
 });

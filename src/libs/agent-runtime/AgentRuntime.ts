@@ -1,7 +1,7 @@
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
-
+import { DEFAULT_PROVIDER } from '@/const/settings/llm';
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeAi21AI } from './ai21';
 import { LobeAi360AI } from './ai360';
@@ -170,6 +170,7 @@ class AgentRuntime {
   ) {
     let runtimeModel: LobeRuntimeAI;
 
+    provider = provider || DEFAULT_PROVIDER;
     switch (provider) {
       default:
       case ModelProvider.OpenAI: {

@@ -1,7 +1,7 @@
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
-
+import { DEFAULT_PROVIDER } from '@/const/settings/llm';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -82,6 +82,8 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
  * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
  */
 export function initializeWithClientStore(provider: string, payload: any) {
+  provider = provider || DEFAULT_PROVIDER;
+
   // add auth payload
   const providerAuthPayload = getProviderAuthPayload(provider);
   const commonOptions = {

@@ -1,7 +1,7 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import superjson from 'superjson';
-
+import { DEFAULT_PROVIDER } from '@/const/settings/llm';
 import { fetchErrorNotification } from '@/components/Error/fetchErrorNotification';
 import { loginRequired } from '@/components/Error/loginRequiredNotification';
 import { ModelProvider } from '@/libs/agent-runtime';
@@ -40,7 +40,7 @@ const links = [
       const { createHeaderWithAuth } = await import('@/services/_auth');
 
       // TODO: we need to support provider select
-      return createHeaderWithAuth({ provider: ModelProvider.OpenAI });
+      return createHeaderWithAuth({ provider: DEFAULT_PROVIDER });
     },
     maxURLLength: 2083,
     transformer: superjson,
