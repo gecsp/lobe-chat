@@ -1,9 +1,11 @@
 import { TRPCError } from '@trpc/server';
 import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
+import Google from '@google/generative-ai';
 import { z } from 'zod';
 
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
-import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { DEFAULT_EMBEDDING_MODEL, DEFAULT_EMBEDDING_PROVIDER, DEFAULT_SMALL_MODEL, DEFAULT_SMALL_PROVIDER } from '@/const/settings';
 import { serverDB } from '@/database/server';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
@@ -13,7 +15,6 @@ import {
   EvalEvaluationModel,
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
-import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChunkService } from '@/server/services/chunk';
@@ -52,8 +53,13 @@ export const ragEvalRouter = router({
 
       const now = Date.now();
       try {
-        const agentRuntime = await initAgentRuntimeWithUserPayload(
-          ModelProvider.OpenAI,
+        const embeddingsAgentRuntime = await initAgentRuntimeWithUserPayload(
+          DEFAULT_EMBEDDING_PROVIDER,
+          ctx.jwtPayload,
+        );
+
+        const smallModelAgentRuntime = await initAgentRuntimeWithUserPayload(
+          DEFAULT_SMALL_PROVIDER,
           ctx.jwtPayload,
         );
 
@@ -62,9 +68,9 @@ export const ragEvalRouter = router({
         let questionEmbeddingId = evalRecord.questionEmbeddingId;
         let context = evalRecord.context;
 
-        // 如果不存在 questionEmbeddingId，那么就需要做一次 embedding
+        // If questionEmbeddingId doesn't exist, we need to perform an embedding
         if (!questionEmbeddingId) {
-          const embeddings = await agentRuntime.embeddings({
+          const embeddings = await embeddingsAgentRuntime.embeddings({
             dimensions: 1024,
             input: question,
             model: !!embeddingModel ? embeddingModel : DEFAULT_EMBEDDING_MODEL,
@@ -82,7 +88,7 @@ export const ragEvalRouter = router({
           questionEmbeddingId = embeddingId;
         }
 
-        // 如果不存在 context，那么就需要做一次检索
+        // If context doesn't exist, we need to perform a retrieval
         if (!context || context.length === 0) {
           const datasetRecord = await ctx.datasetRecordModel.findById(evalRecord.datasetRecordId);
 
@@ -98,20 +104,37 @@ export const ragEvalRouter = router({
           await ctx.evalRecordModel.update(evalRecord.id, { context });
         }
 
-        // 做一次生成 LLM 答案生成
+        // Generate LLM answer
         const { messages } = chainAnswerWithContext({ context, knowledge: [], question });
 
-        const response = await agentRuntime.chat({
+        const response = await smallModelAgentRuntime.chat({
           messages: messages!,
-          model: !!languageModel ? languageModel : DEFAULT_MODEL,
+          model: !!languageModel ? languageModel : DEFAULT_SMALL_MODEL,
           responseMode: 'json',
           stream: false,
           temperature: 1,
         });
 
-        const data = (await response.json()) as OpenAI.ChatCompletion;
+        const rawData = await response.json();
+        let data;
+        let answer;
 
-        const answer = data.choices[0].message.content;
+        switch (DEFAULT_SMALL_PROVIDER.toLowerCase()) {
+          case 'anthropic': {
+            data = rawData as Anthropic.Completions.Completion;
+            answer = data.completion;
+            break;
+          }
+          case 'google': {
+            data = rawData as Google.GenerateContentResult;
+            answer = data.response.text();
+            break;
+          }
+          default: {
+            data = rawData as OpenAI.ChatCompletion;
+            answer = data.choices[0].message.content;
+          }
+        }
 
         await ctx.evalRecordModel.update(input.evalRecordId, {
           answer,

@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
-import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { DEFAULT_EMBEDDING_MODEL, DEFAULT_EMBEDDING_PROVIDER, DEFAULT_SMALL_MODEL, DEFAULT_SMALL_PROVIDER } from '@/const/settings';
 import { EvalEvaluationStatus } from '@/types/eval';
 
 import { timestamps } from './_helpers';
@@ -59,9 +59,10 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
   knowledgeBaseId: text('knowledge_base_id').references(() => knowledgeBases.id, {
     onDelete: 'cascade',
   }),
-  languageModel: text('language_model').$defaultFn(() => DEFAULT_MODEL),
+  languageModel: text('language_model').$defaultFn(() => DEFAULT_SMALL_MODEL),
+  languageProvider: text('language_model').$defaultFn(() => DEFAULT_SMALL_PROVIDER),
   embeddingModel: text('embedding_model').$defaultFn(() => DEFAULT_EMBEDDING_MODEL),
-
+  embeddingProvider: text('embedding_model').$defaultFn(() => DEFAULT_EMBEDDING_PROVIDER),
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   ...timestamps,
 });

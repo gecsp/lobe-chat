@@ -1,4 +1,4 @@
-import { DEFAULT_MODEL } from '@/const/settings';
+import { DEFAULT_SMALL_MODEL } from '@/const/settings';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 export const chainAbstractChunkText = (text: string): Partial<ChatStreamPayload> => {
@@ -14,7 +14,7 @@ export const chainAbstractChunkText = (text: string): Partial<ChatStreamPayload>
         role: 'user',
       },
     ],
-    model: DEFAULT_MODEL,
+    model: DEFAULT_SMALL_MODEL,
   };
 };
 

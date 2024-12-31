@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { DEFAULT_MODEL, DEFAULT_PROVIDER} from '@/const/settings';
+import { DEFAULT_SMALL_MODEL, DEFAULT_SMALL_PROVIDER} from '@/const/settings';
 import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
 
@@ -27,7 +27,7 @@ const ttsSchema = z.object({
 export const AgentSchema = z.object({
   chatConfig: AgentChatConfigSchema,
   fewShots: fewShotsSchema.optional(),
-  model: z.string().default(DEFAULT_MODEL),
+  model: z.string().default(DEFAULT_SMALL_MODEL),
   params: z.object({
     frequency_penalty: z.number().default(0).optional(),
     max_tokens: z.number().optional(),
@@ -36,7 +36,7 @@ export const AgentSchema = z.object({
     top_p: z.number().default(1).optional(),
   }),
   plugins: z.array(z.string()).optional(),
-  provider: z.string().default(DEFAULT_PROVIDER).optional(),
+  provider: z.string().default(DEFAULT_SMALL_PROVIDER).optional(),
   systemRole: z.string().default(''),
   tts: ttsSchema.optional(),
 });

@@ -11,7 +11,11 @@ export const DEFAULT_LLM_CONFIG = genUserLLMConfig({
   },
 });
 
-export const DEFAULT_MODEL = 'claude-3-5-sonnet-20241022';
-export const DEFAULT_EMBEDDING_MODEL = 'text-embedding-3-large';
+export const DEFAULT_CHAT_MODEL = 'claude-3-5-sonnet-20241022';
+export const DEFAULT_CHAT_PROVIDER = ModelProvider.Anthropic;
 
-export const DEFAULT_PROVIDER = ModelProvider.Anthropic;
+export const DEFAULT_EMBEDDING_MODEL = 'text-embedding-3-large';
+export const DEFAULT_EMBEDDING_PROVIDER = ModelProvider.OpenAI;
+
+export const DEFAULT_SMALL_MODEL = 'claude-3-5-haiku-20241022';
+export const DEFAULT_SMALL_PROVIDER = ModelProvider.Anthropic;

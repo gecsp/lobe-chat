@@ -5,7 +5,7 @@ import JSONL from 'jsonl-parse-stringify';
 import pMap from 'p-map';
 import { z } from 'zod';
 
-import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { DEFAULT_EMBEDDING_MODEL, DEFAULT_CHAT_MODEL } from '@/const/settings';
 import { serverDB } from '@/database/server';
 import { FileModel } from '@/database/server/models/file';
 import {
@@ -196,7 +196,7 @@ export const ragEvalRouter = router({
           ideal: record.ideal,
           status: EvalEvaluationStatus.Pending,
           embeddingModel: DEFAULT_EMBEDDING_MODEL,
-          languageModel: DEFAULT_MODEL,
+          languageModel: DEFAULT_CHAT_MODEL,
         })),
       );
 

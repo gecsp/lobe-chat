@@ -3,8 +3,8 @@ import { VoiceList } from '@lobehub/tts';
 import { INBOX_SESSION_ID } from '@/const/session';
 import {
   DEFAULT_AGENT_CONFIG,
-  DEFAULT_MODEL,
-  DEFAULT_PROVIDER,
+  DEFAULT_CHAT_MODEL,
+  DEFAULT_CHAT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
 } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
@@ -37,13 +37,13 @@ const currentAgentSystemRole = (s: AgentStore) => {
 const currentAgentModel = (s: AgentStore): string => {
   const config = currentAgentConfig(s);
 
-  return config?.model || DEFAULT_MODEL;
+  return config?.model || DEFAULT_CHAT_MODEL;
 };
 
 const currentAgentModelProvider = (s: AgentStore) => {
   const config = currentAgentConfig(s);
 
-  return config?.provider || DEFAULT_PROVIDER;
+  return config?.provider || DEFAULT_CHAT_PROVIDER;
 };
 
 const currentAgentPlugins = (s: AgentStore) => {
